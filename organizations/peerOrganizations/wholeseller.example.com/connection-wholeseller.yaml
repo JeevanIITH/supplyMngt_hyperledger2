@@ -1,0 +1,92 @@
+---
+name: test-network-wholeseller
+version: 1.0.0
+client:
+  organization: wholeseller
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+organizations:
+  wholeseller:
+    mspid: WholesellerMSP
+    peers:
+    - peer0.wholeseller.example.com
+    - peer1.wholeseller.example.com
+    certificateAuthorities:
+    - ca.wholeseller.example.com
+peers:
+  peer0.wholeseller.example.com:
+    url: grpcs://localhost:7451
+    tlsCACerts:
+      pem: |
+          -----BEGIN CERTIFICATE-----
+          MIICdTCCAhugAwIBAgIQWy/Acpcu53Gy5kCMlz4FDDAKBggqhkjOPQQDAjCBhDEL
+          MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+          cmFuY2lzY28xIDAeBgNVBAoTF3dob2xlc2VsbGVyLmV4YW1wbGUuY29tMSYwJAYD
+          VQQDEx10bHNjYS53aG9sZXNlbGxlci5leGFtcGxlLmNvbTAeFw0yNDEwMDEwNTA0
+          MDBaFw0zNDA5MjkwNTA0MDBaMIGEMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2Fs
+          aWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZyYW5jaXNjbzEgMB4GA1UEChMXd2hvbGVz
+          ZWxsZXIuZXhhbXBsZS5jb20xJjAkBgNVBAMTHXRsc2NhLndob2xlc2VsbGVyLmV4
+          YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEX5I5g7Wk055bh/A0
+          G6WGi7rwBCom3x9GK/CZ6MPQlcQ40g/qI3yEXJqsMECOTn3dnxly3QooYoWLJ5Iv
+          O6VJ2KNtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggr
+          BgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCBSOUpnPpkRllqUwz39
+          k3zVv2slMeF3P8E0alBrdmaktjAKBggqhkjOPQQDAgNIADBFAiEAoz9RxJ4jhNbd
+          319zwIao+9cTHrSLODi8qwMhhautusYCIDndgV5e4Tknc+3oCwmExxwyB2XMaOMo
+          pvwL5z6rkEFb
+          -----END CERTIFICATE-----
+          
+    grpcOptions:
+      ssl-target-name-override: peer0.wholeseller.example.com
+      hostnameOverride: peer0.wholeseller.example.com
+  peer1.wholeseller.example.com:
+    url: grpcs://localhost:7551
+    tlsCACerts:
+      pem: |
+          -----BEGIN CERTIFICATE-----
+          MIICdTCCAhugAwIBAgIQWy/Acpcu53Gy5kCMlz4FDDAKBggqhkjOPQQDAjCBhDEL
+          MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+          cmFuY2lzY28xIDAeBgNVBAoTF3dob2xlc2VsbGVyLmV4YW1wbGUuY29tMSYwJAYD
+          VQQDEx10bHNjYS53aG9sZXNlbGxlci5leGFtcGxlLmNvbTAeFw0yNDEwMDEwNTA0
+          MDBaFw0zNDA5MjkwNTA0MDBaMIGEMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2Fs
+          aWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZyYW5jaXNjbzEgMB4GA1UEChMXd2hvbGVz
+          ZWxsZXIuZXhhbXBsZS5jb20xJjAkBgNVBAMTHXRsc2NhLndob2xlc2VsbGVyLmV4
+          YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEX5I5g7Wk055bh/A0
+          G6WGi7rwBCom3x9GK/CZ6MPQlcQ40g/qI3yEXJqsMECOTn3dnxly3QooYoWLJ5Iv
+          O6VJ2KNtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggr
+          BgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCBSOUpnPpkRllqUwz39
+          k3zVv2slMeF3P8E0alBrdmaktjAKBggqhkjOPQQDAgNIADBFAiEAoz9RxJ4jhNbd
+          319zwIao+9cTHrSLODi8qwMhhautusYCIDndgV5e4Tknc+3oCwmExxwyB2XMaOMo
+          pvwL5z6rkEFb
+          -----END CERTIFICATE-----
+          
+    grpcOptions:
+      ssl-target-name-override: peer1.wholeseller.example.com
+      hostnameOverride: peer1.wholeseller.example.com
+certificateAuthorities:
+  ca.wholeseller.example.com:
+    url: https://localhost:7254
+    caName: ca-wholeseller
+    tlsCACerts:
+      pem: 
+        - |
+          -----BEGIN CERTIFICATE-----
+          MIICbjCCAhWgAwIBAgIQCCyPbz045S8YIObNbc0fxTAKBggqhkjOPQQDAjCBgTEL
+          MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+          cmFuY2lzY28xIDAeBgNVBAoTF3dob2xlc2VsbGVyLmV4YW1wbGUuY29tMSMwIQYD
+          VQQDExpjYS53aG9sZXNlbGxlci5leGFtcGxlLmNvbTAeFw0yNDEwMDEwNTA0MDBa
+          Fw0zNDA5MjkwNTA0MDBaMIGBMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZv
+          cm5pYTEWMBQGA1UEBxMNU2FuIEZyYW5jaXNjbzEgMB4GA1UEChMXd2hvbGVzZWxs
+          ZXIuZXhhbXBsZS5jb20xIzAhBgNVBAMTGmNhLndob2xlc2VsbGVyLmV4YW1wbGUu
+          Y29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEQ8wvQhObPs9cvROVXHzTsRiJ
+          dk+M0ygZo89Br4Dp4fOYDsMRWQUCJm53mbRUYsmPYEqw9wPlWEI9gU7eJR++r6Nt
+          MGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcD
+          ATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCD6RQT53Mura2k1xIsGC9DYyD2p
+          PDthX+RdvZa5yIm3rDAKBggqhkjOPQQDAgNHADBEAiB43nCxtV0uURSDJF57oQgU
+          YSroLl3Wc8AoaqfaxJzydQIgZod1CkTKU66LXR02jmyVW51CiNrrs00Xpam1u4HO
+          COQ=
+          -----END CERTIFICATE-----
+          
+    httpOptions:
+      verify: false
