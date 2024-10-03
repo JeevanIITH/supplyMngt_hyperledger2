@@ -1,48 +1,118 @@
-# Running the test network
+Following commands are in commands folder
 
-You can use the `./network.sh` script to stand up a simple Fabric test network. The test network has two peer organizations with one peer each and a single node raft ordering service. You can also use the `./network.sh` script to create channels and deploy chaincode. For more information, see [Using the Fabric test network](https://hyperledger-fabric.readthedocs.io/en/latest/test_network.html). The test network is being introduced in Fabric v2.0 as the long term replacement for the `first-network` sample.
-
-Before you can deploy the test network, you need to follow the instructions to [Install the Samples, Binaries and Docker Images](https://hyperledger-fabric.readthedocs.io/en/latest/install.html) in the Hyperledger Fabric documentation.
-
-## Using the Peer commands
-
-The `setOrgEnv.sh` script can be used to set up the environment variables for the organizations, this will help to be able to use the `peer` commands directly.
-
-First, ensure that the peer binaries are on your path, and the Fabric Config path is set assuming that you're in the `test-network` directory.
-
-```bash
- export PATH=$PATH:$(realpath ../bin)
- export FABRIC_CFG_PATH=$(realpath ../config)
+```export PATH=${PWD}/../bin:${PWD}:$PATH
+cryptogen generate --config=./organizations/cryptogen/crypto-config-producer.yaml --output="organizations"
+cryptogen generate --config=./organizations/cryptogen/crypto-config-supplier.yaml --output="organizations"
+cryptogen generate --config=./organizations/cryptogen/crypto-config-wholeseller.yaml --output="organizations"
+cryptogen generate --config=./organizations/cryptogen/crypto-config-orderer1.yaml --output="organizations"
+export COMPOSE_PROJECT_NAME=net
+export DOCKER_SOCK=/var/run/docker.sock
+IMAGE_TAG=latest docker-compose -f compose/compose-test-net.yaml -f compose/docker/docker-compose-test-net.yaml -f compose/compose-ca.yaml up
 ```
+Open another terminal and run .
 
-You can then set up the environment variables for each organization. The `./setOrgEnv.sh` command is designed to be run as follows.
-
-```bash
-export $(./setOrgEnv.sh Org2 | xargs)
 ```
+export PATH=${PWD}/../bin:${PWD}:$PATH
+export FABRIC_CFG_PATH=${PWD}/configtx
+export CHANNEL_NAME=channel1
 
-(Note bash v4 is required for the scripts.)
+configtxgen -profile AllOrg -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
+cp ../config/core.yaml ./configtx/.
 
-You will now be able to run the `peer` commands in the context of Org2. If a different command prompt, you can run the same command with Org1 instead.
-The `setOrgEnv` script outputs a series of `<name>=<value>` strings. These can then be fed into the export command for your current shell.
+export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/server.crt
+export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/server.key
+osnadmin channel join --channelID $CHANNEL_NAME --config-block ./channel-artifacts/${CHANNEL_NAME}.block -o localhost:7053 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
 
-## Chaincode-as-a-service
+export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.key
+osnadmin channel join --channelID $CHANNEL_NAME --config-block ./channel-artifacts/${CHANNEL_NAME}.block -o localhost:7153 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
 
-To learn more about how to use the improvements to the Chaincode-as-a-service please see this [tutorial](./test-network/../CHAINCODE_AS_A_SERVICE_TUTORIAL.md). It is expected that this will move to augment the tutorial in the [Hyperledger Fabric ReadTheDocs](https://hyperledger-fabric.readthedocs.io/en/release-2.4/cc_service.html)
-
-
-## Podman
-
-*Note - podman support should be considered experimental but the following has been reported to work with podman 4.1.1 on Mac. If you wish to use podman a LinuxVM is recommended.*
-
-Fabric's `install-fabric.sh` script has been enhanced to support using `podman` to pull down images and tag them rather than docker. The images are the same, just pulled differently. Simply specify the 'podman' argument when running the `install-fabric.sh` script. 
-
-Similarly, the `network.sh` script has been enhanced so that it can use `podman` and `podman-compose` instead of docker. Just set the environment variable `CONTAINER_CLI` to `podman` before running the `network.sh` script:
-
-```bash
-CONTAINER_CLI=podman ./network.sh up
-````
-
-As there is no Docker-Daemon when using podman, only the `./network.sh deployCCAAS` command will work. Following the Chaincode-as-a-service Tutorial above should work. 
+export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.key
+osnadmin channel join --channelID $CHANNEL_NAME --config-block ./channel-artifacts/${CHANNEL_NAME}.block -o localhost:7253 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
 
 
+source ./scripts/setOrgPeerContext.sh 1
+peer channel join -b ./channel-artifacts/${CHANNEL_NAME}.block
+
+source ./scripts/setOrgPeerContext.sh 2
+peer channel join -b ./channel-artifacts/${CHANNEL_NAME}.block
+
+source ./scripts/setOrgPeerContext.sh 3
+peer channel join -b ./channel-artifacts/${CHANNEL_NAME}.block
+
+source ./scripts/setOrgPeerContext.sh 4
+peer channel join -b ./channel-artifacts/${CHANNEL_NAME}.block
+
+source ./scripts/setOrgPeerContext.sh 5
+peer channel join -b ./channel-artifacts/${CHANNEL_NAME}.block
+
+source ./scripts/setOrgPeerContext.sh 6
+peer channel join -b ./channel-artifacts/${CHANNEL_NAME}.block
+
+
+
+source ./scripts/setOrgPeerContext.sh 1
+docker exec cli ./scripts/setAnchorPeer.sh 1 $CHANNEL_NAME
+
+source ./scripts/setOrgPeerContext.sh 3
+docker exec cli ./scripts/setAnchorPeer.sh 3 $CHANNEL_NAME
+
+source ./scripts/setOrgPeerContext.sh 5
+docker exec cli ./scripts/setAnchorPeer.sh 5 $CHANNEL_NAME
+
+
+
+
+
+source ./scripts/setChaincodeContext.sh
+
+
+source ./scripts/setOrgPeerContext.sh 1
+peer lifecycle chaincode package supply1.tar.gz --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} --label supply1_${VERSION}
+
+peer lifecycle chaincode install supply1.tar.gz
+
+
+source ./scripts/setOrgPeerContext.sh 2
+peer lifecycle chaincode install supply1.tar.gz
+
+source ./scripts/setOrgPeerContext.sh 3
+peer lifecycle chaincode install supply1.tar.gz
+source ./scripts/setOrgPeerContext.sh 4
+peer lifecycle chaincode install supply1.tar.gz
+source ./scripts/setOrgPeerContext.sh 5
+peer lifecycle chaincode install supply1.tar.gz
+source ./scripts/setOrgPeerContext.sh 6
+peer lifecycle chaincode install supply1.tar.gz
+
+peer lifecycle chaincode queryinstalled 2>&1 | tee outfile
+
+source ./scripts/setPackageID.sh outfile
+
+source ./scripts/setOrgPeerContext.sh 1
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer1.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name supply1 --version ${VERSION} --init-required --package-id ${PACKAGE_ID} --sequence ${VERSION}
+
+
+peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name supply1 --version ${VERSION} --sequence ${VERSION} --output json --init-required
+source ./scripts/setOrgPeerContext.sh 3
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer1.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name supply1 --version ${VERSION} --init-required --package-id ${PACKAGE_ID} --sequence ${VERSION}
+source ./scripts/setOrgPeerContext.sh 5
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer1.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name supply1 --version ${VERSION} --init-required --package-id ${PACKAGE_ID} --sequence ${VERSION}
+
+
+source ./scripts/setOrgPeerContext.sh 1
+peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name supply1 --version ${VERSION} --sequence ${VERSION} --output json --init-required
+
+
+source ./scripts/setPeerConnectionParam.sh 1 2 3 4 5 6
+peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer1.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name supply1 $PEER_CONN_PARAMS --version ${VERSION} --sequence ${VERSION} --init-required
+
+source ./scripts/setOrgPeerContext.sh 1
+peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer1.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C channel1 -n supply1 $PEER_CONN_PARAMS --isInit -c '{"function":"InitLedger","Args":[]}'
+peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer1.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C channel1 -n supply1 $PEER_CONN_PARAMS -c '{"function":"GetAllAssets","Args":[]}'
+
+```
