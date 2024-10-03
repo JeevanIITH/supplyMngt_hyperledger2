@@ -114,5 +114,27 @@ peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride o
 source ./scripts/setOrgPeerContext.sh 1
 peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer1.example.com --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C channel1 -n supply1 $PEER_CONN_PARAMS --isInit -c '{"function":"InitLedger","Args":[]}'
 peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer1.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C channel1 -n supply1 $PEER_CONN_PARAMS -c '{"function":"GetAllAssets","Args":[]}'
-
 ```
+Generating CCP files.
+```
+./organizations/ccp-generate.sh
+```
+Copy 
+-organizations/peerOrganizations/producer.example.com/connection-producer.json
+-organizations/peerOrganizations/supplier.example.com/connection-supplier.json
+-organizations/peerOrganizations/wholeseller.example.com/connection-wholeseller.json
+Paste in fabricSDK/certs folder.
+
+
+Node js SDK .
+```
+cd fabricSDK
+node app.js
+```
+
+APIs       
+-POST : `localhost:3000:/api/enrollAdmin`        
+-POST : `localhost:3000:/api/registerUser`      
+-POST : `localhost:3000:/api/product`
+
+
