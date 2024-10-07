@@ -1,7 +1,7 @@
 Paste this folder in fabric samples folder
 Following commands are in commands folder
 
-```export PATH=${PWD}/../bin:${PWD}:$PATH
+```export PATH=${PWD}/bin:${PWD}:$PATH
 cryptogen generate --config=./organizations/cryptogen/crypto-config-producer.yaml --output="organizations"
 cryptogen generate --config=./organizations/cryptogen/crypto-config-supplier.yaml --output="organizations"
 cryptogen generate --config=./organizations/cryptogen/crypto-config-wholeseller.yaml --output="organizations"
@@ -13,12 +13,12 @@ IMAGE_TAG=latest docker-compose -f compose/compose-test-net.yaml -f compose/dock
 Open another terminal and run .
 
 ```
-export PATH=${PWD}/../bin:${PWD}:$PATH
+export PATH=${PWD}/bin:${PWD}:$PATH
 export FABRIC_CFG_PATH=${PWD}/configtx
 export CHANNEL_NAME=channel1
 
 configtxgen -profile AllOrg -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
-cp ../config/core.yaml ./configtx/.
+cp ./config/core.yaml ./configtx/.
 
 export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/server.crt
