@@ -1,7 +1,8 @@
 Paste this folder in fabric samples folder
 Following commands are in commands folder
 
-```export PATH=${PWD}/bin:${PWD}:$PATH
+```
+export PATH=${PWD}/bin:${PWD}:$PATH
 cryptogen generate --config=./organizations/cryptogen/crypto-config-producer.yaml --output="organizations"
 cryptogen generate --config=./organizations/cryptogen/crypto-config-supplier.yaml --output="organizations"
 cryptogen generate --config=./organizations/cryptogen/crypto-config-wholeseller.yaml --output="organizations"
