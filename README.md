@@ -1,3 +1,4 @@
+use paste this folder in fabric samples folder
 Following commands are in commands folder
 
 ```export PATH=${PWD}/../bin:${PWD}:$PATH
