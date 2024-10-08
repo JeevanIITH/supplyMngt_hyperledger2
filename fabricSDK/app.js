@@ -64,6 +64,10 @@ app.post('/api/product', (req, res) => {
 		
 });
 
+app.get('/api/getAll',(req,res)=>{
+    
+});
+
 
 let port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`server listening on port ${port}....`)); 

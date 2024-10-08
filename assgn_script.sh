@@ -1,5 +1,5 @@
 # ./network.sh down
-export PATH=${PWD}/../bin:${PWD}:$PATH
+export PATH=${PWD}/bin:${PWD}:$PATH
 cryptogen generate --config=./organizations/cryptogen/crypto-config-org4.yaml --output="organizations"
 cryptogen generate --config=./organizations/cryptogen/crypto-config-org5.yaml --output="organizations"
 cryptogen generate --config=./organizations/cryptogen/crypto-config-orderer.yaml --output="organizations"

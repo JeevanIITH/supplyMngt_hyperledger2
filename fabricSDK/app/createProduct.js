@@ -59,7 +59,7 @@ exports.createProduct = async (productid, name_1, description, manufacturingDate
         console.log('Gateway Not connected');
         await gateway.connect(ccp, {
             wallet,
-            identity: userId,
+            identity: 'User1',
             discovery: { enabled: true, asLocalhost: true }
         });
         console.log('Gateway connected');
