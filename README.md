@@ -1,4 +1,4 @@
-Paste this folder in fabric samples folder
+
 Following commands are in commands folder
 
 ```
@@ -134,9 +134,21 @@ cd fabricSDK
 node app.js
 ```
 
-APIs       
--POST : `localhost:3000:/api/enrollAdmin`        
--POST : `localhost:3000:/api/registerUser`      
+APIs
+Created by cryptogen , So import User identity, certs into wallets by sending following post req 
+-POST : `localhost:3000:/api/registerUser` 
+    {
+      "userId": "User1",
+      "affiliation": "test" 
+    }
 -POST : `localhost:3000:/api/product`
+  {
+    "productid" : "iPhone19",
+    "name" : "iPhone18Pro",
+    "description" : "New iPhone ",
+    "manufacturingDate": "20-3-3000",
+    "batchNumber" : "2341234",
+    "userId" : "User1"
+  }
 
 
